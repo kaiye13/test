@@ -1,0 +1,332 @@
+/* Top Section */
+h4 h3{
+  font-family: var(--font-face);
+}
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .max-width{
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: var(--font-face);  }
+  
+  .back-link {
+    color: var(--third-color);
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .imagewithmaterials{
+    display: flex;
+    align-items: center;
+  }
+  .order-info-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+  }
+  .prices{
+    margin-left: auto; 
+    margin-right: 0;
+  }
+  .order-details {
+    margin-right: 20px;
+    font-family: var(--font-face);
+  }
+  .order-details h4, h3 {
+    font-family: var(--font-face);
+
+  }
+  
+  .top-add-btn {
+    padding: 10px 20px;
+    background-color: var(--fifth-color);
+    border: 1px solid var(--third-color);
+    color: var(--third-color);
+    cursor: pointer;
+    font-family: var(--font-face);
+  }
+  
+  .top-add-btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Product List */
+  .container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .product-list {
+    width: 60%;
+  }
+  
+  .product-item {
+    border: 1px solid var(--seventh-color);
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .product-image {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  
+  .product-details {
+    flex-grow: 1;
+  }
+  
+  .copy-link, .edit-link {
+    color: var(--third-color);
+    text-decoration: none;
+  }
+  
+  .quantity-control {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity-control button {
+    margin: 0 5px;
+    border: 1px var(--primary-color) solid;
+    background-color: #F8F9FC ;
+    color: #1F2747;
+    cursor: pointer;
+    height: 35px;
+    /* line-height: 40px; */
+    width: 35px;
+  }
+  #remove{
+    margin: 0 0px;
+    border: none;
+    color: var(--primary-color);
+    background-color: var(--fifth-color);
+    display: block;
+    font-size: 25px;
+  }
+  
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .add-product-btn {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--third-color);
+    color: var(--fifth-color);
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Cart Summary */
+  .cart-summary {
+    width: 35%;
+    border: 1px solid var(--seventh-color);
+    padding: 20px;
+    background-color: var(--secondary-color);
+  }
+  
+  .order-summary-box {
+    margin-bottom: 20px;
+  }
+  
+  .checkout-btn {
+    display: inline-flex; /* Align icon and text horizontally */
+    align-items: center; /* Center vertically */
+    padding: 10px 20px;
+    background-color: var(--green-color); /* Green background */
+    color: var(--fifth-color); /* var(--fifth-color) text */
+    width: auto; /* Adjust width automatically */
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+    font-family: var(--font-face);
+    justify-content: center; /* Center content horizontally */
+    gap: 8px; /* Add space between icon and text */
+    border-radius: 5px; /* Optional: Smooth rounded corners */
+  }
+  
+  .basket {
+    font-size: 30px; /* Adjust icon size */    
+    line-height: 1; /* Ensure icon doesn't affect vertical alignment */
+  }
+  
+  .checkout-btn:hover {
+    background-color: var(--green-color);
+  }
+  
+  /* Bottom Add Section */
+  .bottom-add-section {
+    border: 1px solid var(--seventh-color);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-family: var(--font-face);
+  }
+  
+  .text-container h4 {
+    margin: 0;
+    font-weight: bold;
+    font-family: var(--font-face);
+  }
+  
+  .text-container p {
+    margin: 5px 0 0;
+    font-size: 14px;
+  }
+  
+  .bottom-add-btn {
+    padding: 10px 20px;
+    background-color: var(--fifth-color);
+    border: 1px solid var(--third-color);
+    color: var(--third-color);
+    cursor: pointer;
+    font-family: var(--font-face);
+  }
+  
+  .bottom-add-btn:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .summary-toggle-btn{
+    display: none;
+  }
+
+/* General Mobile Styles */
+@media only screen and (max-width: 768px) {
+  .product-list.mobile-layout {
+    width: 100%;
+  }
+
+  .cart-summary{
+    padding:0;
+  }
+  /* Toggle Button for Cart Summary */
+
+/* Container for Cart Summary Toggle Button */
+.cart-summary-toggle {
+  box-shadow: rgba(31, 39, 71, 0.68) 2px 0px 24px;
+  position: fixed ;
+  padding: 4%;
+  bottom: 0px; /* Keeps some space from the very bottom of the screen */
+  left: 50%;
+  transform: translateX(-50%); /* Centers the button horizontally */
+  z-index: 998; /* Places it above other elements */
+  width: 100%;
+  background-color: var(--secondary-color); /* Almost full width but leaves a little margin */
+}
+.alignnexttoeachother{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  Strong {
+    width: 40%;
+  } 
+  .checkout-btn{
+    width: 40%;
+  }
+}
+/* Cart Summary Button Styling */
+.summary-toggle-btn {
+  display: block;
+  width: 10%;
+  padding: 10px;
+  margin: 14px;
+  align-self: flex-end;
+  /* background-color: #4caf50; */
+  color: var(--dark-color);
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  /* box-shadow: 0px 8px 15px var(--dark-color); */
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover and Active Effects for Button */
+.summary-toggle-btn:hover {
+  background-color: var(--green-color);
+  box-shadow: 0px 12px 20px var(--dark-color); /* Increase shadow to give a raised effect */
+}
+
+.summary-toggle-btn:active {
+  background-color: var(--green-color);
+  box-shadow: 0px 4px 10px var(--dark-color); /* Reduced shadow to mimic button press */
+  transform: translateY(2px); /* Visual movement down to simulate pressing */
+}
+
+
+  .summary-toggle-btn:hover {
+    background-color: var(--third-color);
+  }
+
+  /* Cart Summary Drawer */
+  .cart-summary.mobile-summary {
+    position: fixed ;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0%;
+    background-color: var(--secondary-color);
+    border-top: 1px solid var(--seventh-color);
+    overflow: hidden;
+    transition: height 0.3s ease-in-out;
+    z-index: 999;
+    width: 100%;
+    display: none;
+    border-radius: 30px 30px 0px 0px;
+  }
+
+  .cart-summary.mobile-summary.show {
+    height: 47%; 
+    display: block;
+  }
+
+  .cart-summary-content {
+    height: 84%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .order-summary-box {
+    margin-bottom: 15px;
+  }
+
+  .checkout-btn {
+    width: 90%;
+    align-self: center;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: var(--green-color);
+    color: var(--fifth-color);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .checkout-btn:hover {
+    background-color: var(--green-color);
+  }
+}
+
+  
+
+  

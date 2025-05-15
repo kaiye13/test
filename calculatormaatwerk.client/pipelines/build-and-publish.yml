@@ -1,0 +1,135 @@
+trigger:
+- master
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  API_URL_TEST: 'https://calculatormaatwerkapi.azurewebsites.net/Windowsill/'
+  API_URL_PROD: 'https://calculatormaatwerkapi-live-cyb0gyaqfxdzd6d5.westeurope-01.azurewebsites.net/Windowsill/'
+
+stages:
+# Stage 1: Install Dependencies and Build Artifacts
+- stage: Build
+  displayName: 'Install Dependencies and Build Artifacts'
+  jobs:
+  - job: Build
+    displayName: 'Install Dependencies and Build Artifacts'
+    steps:
+    
+    # Step 1: Install Node.js
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.16.0'  # Use the same Node.js version as your local environment
+      displayName: 'Install Node.js'
+
+    # Step 2: Clean npm cache and install dependencies
+    - script: |
+        npm cache clean --force
+        npm install -g @angular/cli
+        npm install
+      displayName: 'Install dependencies'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+      # Step 3: Replace API URL in config.json for production
+    - script: |
+        cp src/assets/config.json src/assets/config.prod.json
+        sed -i "s|\${API_URL}|$(API_URL_PROD)|g" src/assets/config.prod.json
+      displayName: 'Set Production API URL in config.json'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+    # Step 4: Build the Angular project for production
+    - script: |
+        ng build --configuration production
+      displayName: 'Build Angular app for Production'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+    # Step 5: Publish Production Build Artifacts
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(System.DefaultWorkingDirectory)/calculatormaatwerk.client/dist/calculatormaatwerk.client'
+        artifactName: 'angular-app-prod'
+        publishLocation: 'Container'
+      displayName: 'Publish Production Build Artifacts'
+
+    # Step 6: Replace API URL in config.json for test
+    - script: |
+        cp src/assets/config.json src/assets/config.test.json
+        sed -i "s|\${API_URL}|$(API_URL_TEST)|g" src/assets/config.test.json
+      displayName: 'Set Test API URL in config.json'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+    # Step 7: Build the Angular project for test
+    - script: |
+        ng build --configuration=test
+      displayName: 'Build Angular app for Test'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+    # Step 8: Publish Test Build Artifacts
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(System.DefaultWorkingDirectory)/calculatormaatwerk.client/dist/calculatormaatwerk.client'
+        artifactName: 'angular-app-test'
+        publishLocation: 'Container'
+      displayName: 'Publish Test Build Artifacts'
+
+
+# Stage 2: Deploy to Test Environment
+- stage: DeployTest
+  displayName: 'Deploy to Test Environment'
+  dependsOn: Build
+  jobs:
+  - job: DeployTest
+    displayName: 'Deploy to Test Environment'
+    steps:
+    
+    # Step 1: Download the test artifact from the build stage
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        artifactName: 'angular-app-test'
+        downloadPath: '$(System.DefaultWorkingDirectory)'
+
+    - script: |
+        echo "Listing contents of $(System.DefaultWorkingDirectory):"
+        ls -R $(System.DefaultWorkingDirectory)
+      displayName: 'Log Default Working Directory Contents'
+
+    # Step 2: Deploy to Azure Static Web App (Test)
+    - task: AzureStaticWebApp@0
+      inputs:
+        app_location: 'calculatormaatwerk.client'
+        api_location: ''
+        output_location: 'dist/calculatormaatwerk.client/browser'
+        azure_static_web_apps_api_token: 'b76ec32b7c1c183fde3c404fbc2339bbe2b26a33f00c3e9d98eb35c47cfc1b865-e5cbf895-39f3-44af-bf7b-9107fbfec4ad003608114'  # Replace with your test deployment token
+
+# Stage 3: Deploy to Production Environment
+- stage: DeployProd
+  displayName: 'Deploy to Production Environment'
+  dependsOn: DeployTest
+  jobs:
+  - deployment: DeployProd
+    displayName: 'Deploy to Production Environment'
+    environment: 'Productie'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+              # Add an approval step before deploying to production
+          
+          # Step 1: Download the production artifact from the build stage
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: 'angular-app-prod'
+              downloadPath: '$(System.DefaultWorkingDirectory)'
+
+          - script: |
+              echo "Listing contents of $(System.DefaultWorkingDirectory):"
+              ls -R $(System.DefaultWorkingDirectory)
+            displayName: 'Log Default Working Directory Contents'
+
+          # Step 2: Deploy to Azure Static Web App (Production)
+          - task: AzureStaticWebApp@0
+            inputs:
+              app_location: 'angular-app-prod/browser'
+              api_location: ''
+              output_location: ''
+              azure_static_web_apps_api_token: '852a5d6790b653f92f8a191547ccd73108cbf33915645d2d4066ca51ccbff2e505-213d3c41-a4d9-472b-b875-5688e85f5ee300307130fe6c4703'  # Replace with your production deployment token

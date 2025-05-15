@@ -1,0 +1,166 @@
+<div class="product-page">
+  <!-- Back Button -->
+  <div class="back-button-container">
+    <a (click)="GoBackToMain()" class="back-link">← {{'Back'| translate}}</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Product Image Section -->
+    <div class="product-image">
+      <h2>{{windowsillWithId.name | translate}}</h2>
+      <img *ngIf="windowsillPictures && windowsillPictures.length" [src]="selectedImage || getMainImage()"
+        alt="Product Image" class="main-image">
+      <div class="thumbnail-gallery">
+        <img *ngFor="let picture of windowsillPictures" [src]="picture.image" alt="Thumbnail"
+          (click)="selectedImage = picture.image">
+      </div>
+    </div>
+
+    <!-- Product Options Section -->
+    <div class="product-options">
+      <div *ngIf="windowsillConfiguration">
+        <div class="option" *ngFor="let configuration of windowsillConfiguration"
+        [ngClass]="{ 'active': OptionsActive[configuration.option] }">
+        <h3 class="option-title" (click)="toggleContentConfiguration(configuration)">{{configuration.option | titlecase |
+            translate: { value: 'Fallback Text' } }} <span class="toggle-arrow">&#9660;</span></h3>
+          <div *ngIf="configuration.type === 'checkbox'">
+            <div class="option-content" *ngIf="!checkIfActive(configuration.option)">
+              <label for="project-name">{{ getActiveOption(configuration) }}</label>
+            </div>
+            <div class="option-content" *ngIf="checkIfActive(configuration.option)">
+              <div *ngFor="let option of configuration.options" class="checkbox-container">
+                <input type="checkbox" [ngModel]="CheckboxStates[option]" id="{{ option }}"
+                  (change)="isValueChanged($event, option, configuration)">
+                <label for="{{ option }}">{{ option }}</label>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="configuration.type === 'input'">
+            <div class="option-content" *ngIf="!checkIfActive(configuration.option)">
+              <label for="project-name">{{ getActiveOption(configuration) }}</label>
+            </div>
+            <div *ngIf="configuration.option === 'measurements'">
+              <label *ngIf="checkIfActive(configuration.option) && !checkForConfiguration()">{{ 'TypePlaceFill' |
+                  translate}}</label>
+              <div class="option-content" *ngIf="checkIfActive(configuration.option) && checkForConfiguration()">
+                
+                <div class="option ">
+                  <label> {{'Measurements Material' | translate}}</label>
+                  <img src="{{windowsillWithId.picture}}" alt="Product Image" class="image">
+                  <label>{{windowsillWithId.name}}</label>
+                  <label>{{'Min Width' | translate}}: {{windowsillWithId.minWidth}} mm,  {{'Max Width' | translate}}: {{windowsillWithId.maxWidth}} mm</label>
+                  <label>{{'Min Length' | translate}}: {{windowsillWithId.minLength}} mm,  {{'Max Length' | translate}}: {{windowsillWithId.maxLength}} mm</label>
+                </div>
+                <div class="option  ">
+                  <label>{{'Measurement Instructions' | translate }}</label>
+                  <label>{{'Place' | translate}}: {{getPlaceOfConfiguration()}} </label>
+                  <label>{{'Shape' | translate}}: {{getTypeOfConfiguration()}}</label>
+                  <img src="{{getPictureMeasurementInstructions()}}" alt="Product Image" class="image"
+                    (click)="showBigPicture(getPictureMeasurementInstructions())">
+                  <label>{{'Min Width' | translate}}: {{windowsillWithId.minWidth}} mm,  {{'Max Width' | translate}}: {{windowsillWithId.maxWidth}} mm</label>
+                  <label>{{'Min Length' | translate}}: {{windowsillWithId.minLength}} mm,  {{'Max Length' | translate}}: {{windowsillWithId.maxLength}} mm</label>
+                </div>
+                <div *ngFor="let option of fillInConfigurationMeasurements(configuration.options)"
+                  class="checkbox-container-vert">
+                  <label for="{{ option }}">{{ option }}: </label>
+                  <div class="input-wrapper">
+                    <input type="number" class="mmInput" [(ngModel)]="InputValues[option]" appValueRange
+                      [appMinValue]="getMinValue(option)" [appMaxValue]="getMaxValue(option)"
+                      [appErrorMessage]="('ValueMust' | translate) + ' ' + getMinValue(option) + ' ' + ('AND' | translate) + ' ' + getMaxValue(option)"
+                      (change)="isNumberValueChanged($event, option, configuration)"
+                      (input)="onInputChange(option, $event, configuration)"
+                      (validityChange)="onValidityChange(option, $event)">
+                    <span class="unit">mm</span>
+                    <div class="error-message">{{ 'ValueMust' | translate }}{{ getMinValue(option) }} {{'AND' |
+                      translate}} {{
+                      getMaxValue(option) }}</div>
+                  </div>
+                </div>
+                <div *ngIf="CheckIfCombined()" class="checkbox-container-vert">
+                  <p>{{'Anouncement Combined' | translate}}</p>
+                  <input type="text" maxlength="200"
+                  [(ngModel)]= "anouncement"
+                  [ngClass]="{'error-border': isErrorVisibleLabel}"
+                  (change)="saveCombinedValue($event, combinedValue, configuration)"
+                  (input)="checkMaxLengthlabel()">
+                  <div class="error-messages" *ngIf="isErrorVisibleLabel">{{ 'Label announcement' | translate }}</div>
+                  <p> {{'Warning' | translate}}</p>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="configuration.option !== 'measurements'">
+              <div class="option-content" *ngIf="!checkIfActive(configuration.option)">
+                <label for="project-name">{{ getActiveValue(configuration) }}</label>
+              </div>
+              <div class="option-content" *ngIf="checkIfActive(configuration.option)">
+                <div *ngFor="let option of configuration.options" class="input-wrapper">
+                  <label for="{{ option }}">{{ option }}</label>
+                  <input type="text"  maxlength="200" [(ngModel)]="InputValuesNonMeasurements[option]" id="{{ option }}"
+                    (change)="SaveValueInput($event, option, configuration)" [ngClass]="{'error-border': isErrorVisibleLabel}" 
+                    (input)="checkMaxLengthlabel()">
+                </div>
+                <div class="error-messages" *ngIf="isErrorVisibleLabel">{{ 'Label announcement' | translate }}</div>
+              </div>
+
+            </div>
+          </div>
+        
+        </div>
+
+        <!-- <label>Standaard zijn er al drie zijden van de vensterbank gepolijst: de zichtzijde en de twee kopse zijden.
+            je kan er natuurlijk ook voor kiezen om de 2de lange zijde ook te laten polijsten.</label> -->
+        <!-- Footer Section Integrated into Product Options -->
+        <div class="footer">
+          <div class="price" >{{valuta}} {{ calculateTotalSquareMeter() }}</div>
+          <button class="add-to-cart" (click)="goToProductConfigerdlist()" [disabled]="!isFilledIn || isErrorVisible || isErrorVisibleLabel">
+            {{'Add To List' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-props">
+      <h3 (click)="toggleVisibility('description')">
+        <!-- [class.open]="filter.open"-->
+        <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ExpandMoreIcon">
+          <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+        </svg>
+        <span> {{'Product Description' | translate }} </span>
+      </h3>
+      <div class="product-info" *ngIf="isDescriptionVisible"><span>{{productproperties.description}}</span></div>
+
+      <h3 (click)="toggleVisibility('properties')">
+        <!-- [class.open]="filter.open"-->
+        <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ExpandMoreIcon">
+          <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+        </svg>
+        <span> {{'Product Properties' | translate }}</span>
+      </h3>
+      <div class="product-info" *ngIf="isPropertiesVisible">
+        <table>
+          <tbody>
+            <tr *ngFor="let prop of getProperties()">
+              <td>{{ prop.name | titlecase | translate }}</td>
+              <td>{{ prop.value.toString() | translate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 (click)="toggleVisibility('application')">
+        <!-- [class.open]="filter.open"-->
+        <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ExpandMoreIcon">
+          <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+        </svg>
+        <span>{{'Usages' | translate}} </span>
+      </h3>
+      <div class="product-info" *ngIf="isApplicationVisible">
+        <ul>
+          <li *ngFor="let property of getPropertiesAsArray()">{{ property }}</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+
+    </div>
+  </div>

@@ -1,0 +1,30 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "redirect": "/hubo/nl-BE"
+    },
+    {
+      "route": "/hubo/nl-BE"
+    },
+    {
+      "route": "/hubo/fr-BE"
+    },
+    {
+      "route": "/hubo/nl-BE/configurator/*"
+    },
+    {
+      "route": "/hubo/nl-BE/configuredlist"
+    },
+    {
+      "route": "/hubo/fr-BE/configurator/*"
+    },
+    {
+      "route": "/hubo/fr-BE/configuredlist"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "*.js", "*.css", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.woff2", "*.ttf"]
+  }
+}

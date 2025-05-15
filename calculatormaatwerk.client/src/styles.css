@@ -1,0 +1,72 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+@font-face {
+  font-family: RobotoCondensed;
+  src: url(assets/font/RobotoCondensed-VariableFont_wght.ttf) format("opentype");
+}
+@font-face {
+  font-family: RubrikBold;
+  src: url(assets/font/Rubrik\ Medium.otf) format("opentype");
+}
+@font-face {
+  font-family: Overpass;
+  src: url(assets/font/Overpass_Regular.ttf) format("opentype");
+}
+@font-face {
+  font-family: RobotoRegular;
+  src: url(assets/font/Roboto-Regular.ttf) format("opentype");
+}
+
+
+body.hubo-theme{
+  --primary-color: #001D85;
+  --secondary-color: #F4F6FA;
+  --third-color: #2E4EBE;
+  --fourth-color: #D33641;
+  --fifth-color: #fff;
+  --sixth-color: #00155F;
+  --seventh-color: #CED4DA;
+  --green-color: #669933;
+  --dark-color: #101010;
+  --font-face: RobotoCondensed;
+}
+
+body.coeck-theme{
+  --primary-color: #00573C;
+  --secondary-color: #E3E3E3;
+  --third-color: #829A8D;
+  --fourth-color: #ABA66D;
+  --fifth-color: #FFFFFF;
+  --sixth-color: #466153;
+  --green-color: #327864;
+  --seventh-color: #E5F4EC;
+  --dark-color: #3C3C3B;
+  --font-face: RobotoRegular;
+}
+
+body.gamma-theme{
+  --primary-color: #003878;
+  --secondary-color: #F4F6FA;
+  --third-color: #6d818d;
+  --fourth-color: #b93a16;
+  --fifth-color: #fff;
+  --sixth-color: #36444d;
+  --seventh-color: #a1b5c5;
+  --green-color: #74c200;
+  --dark-color: #000;
+  --font-face: Overpass;
+}
+
+body.brico-theme{
+  --primary-color: #e20019;
+  --secondary-color: #F4F6FA;
+  --third-color: #e20019;
+  --fourth-color: #101010;
+  --fifth-color: #fff;
+  --sixth-color: #e20019;
+  --seventh-color: #CED4DA;
+  --green-color: #e20019;
+  --dark-color: #101010;
+  --font-face: ubuntu, sans-serif;
+}

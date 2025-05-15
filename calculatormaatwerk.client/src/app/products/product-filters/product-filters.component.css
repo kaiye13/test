@@ -1,0 +1,127 @@
+body{
+  font-family: var(--font-face);
+}
+.filters {
+  width: 300px;
+  font-family: var(--font-face);
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+  .filter-group h3 {
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    font-family: var(--font-face);
+    font-size: 24px;
+    align-items: center;
+    color: var(--primary-color);
+    font-weight: 400;
+  }
+
+   h3 p {
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    font-family: var(--font-face);
+    align-items: center;
+  }
+
+     h3 svg {
+      transition: transform 0.3s ease;
+      margin-right: 2%;
+      height: 1em;
+    }
+
+       h3 svg.open {
+        transform: rotate(180deg);
+      }
+
+.filter-options {
+  margin-top: 10px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+  .filter-option label {
+    margin-left: 10px;
+  }
+
+  .filters  button:disabled {
+    background-color: var(--seventh-color);
+    cursor: not-allowed;
+  }
+
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+  .price-inputs input {
+    width: 40%;
+    padding: 5px;
+    border: 1px solid var(--fifth-color);
+    border-radius: 4px;
+  }
+
+  .price-inputs span {
+    margin: 0 10px;
+  }
+.range-input {
+  height: 6px;
+  position: relative;
+  background: var(--secondary-color);
+  border-radius: 5px;
+}
+
+.myslider {
+  width: 100%;
+  color: var(--primary-color);
+  --mdc-slider-thumb-knob-top: 53%;
+  --mdc-slider-handle-height: 25%;
+  --mdc-slider-handle-width: 25%;
+  --mdc-slider-handle-color: var(--primary-color);
+  --mdc-slider-active-track-color: var(--primary-color);
+  --mdc-slider-focus-handle-color: var(--primary-color);
+}
+
+
+
+  mdc-slider__track--inactive {
+  left: 0;
+  top: 0;
+  opacity: .24;
+  background-color: purple;
+  height: 2px;
+}
+
+.mdc-slider__thumb-knob {
+  position: absolute;
+  box-sizing: border-box;
+  left: 50%;
+  top: 53%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-color: red;
+  border-radius: 10px;
+}
+
+
+@media (max-device-width: 780px) {
+  .myslider {
+    width: 200px;
+  }
+}
+

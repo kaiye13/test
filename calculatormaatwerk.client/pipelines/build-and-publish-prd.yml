@@ -1,0 +1,66 @@
+trigger:
+- master
+pool:
+  vmImage: 'ubuntu-latest'
+stages:
+# Stage 1: Build the Angular App
+- stage: Build
+  displayName: 'Build Angular Application'
+  jobs:
+  - job: Build
+    displayName: 'Build Angular Project'
+    steps:
+    
+    # Step 1: Install Node.js
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.16'
+      displayName: 'Install Node.js'
+
+    - script: |
+        echo "##vso[task.setvariable variable=NODE_ENV]production"
+      displayName: 'Set Environment to Production'
+
+       # Step 2: Clean npm cache and install dependencies
+    - script: |
+        npm cache clean --force
+        npm install -g @angular/cli
+        npm install
+      displayName: 'Install dependencies'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+    
+
+    # Step 3: Build the Angular project (with production configuration)
+    - script: |
+       ng build --configuration production
+      displayName: 'Build Angular app'
+      workingDirectory: $(System.DefaultWorkingDirectory)/calculatormaatwerk.client
+
+    # Step 4: Publish Build Artifacts
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(System.DefaultWorkingDirectory)/calculatormaatwerk.client/dist/calculatormaatwerk.client'
+        artifactName: 'angular-app'
+        publishLocation: 'Container'
+      displayName: 'Publish Build Artifacts'
+
+- stage: Deploy
+  displayName: 'Deploy to Azure Static Web App'
+  dependsOn: Build
+  jobs:
+    - job: Deploy
+      displayName: 'Deploy to Azure Static Web App'
+      steps:
+        # Step 1: Download the artifact from the build stage
+        - task: DownloadBuildArtifacts@0
+          inputs:
+            artifactName: 'angular-app'
+            downloadPath: '$(System.DefaultWorkingDirectory)'
+
+        # Step 2: Deploy to Azure Static Web App
+        - task: AzureStaticWebApp@0
+          inputs:
+            app_location: 'calculatormaatwerk.client'
+            api_location: ''
+            output_location: 'dist/calculatormaatwerk.client/browser'
+            azure_static_web_apps_api_token: '852a5d6790b653f92f8a191547ccd73108cbf33915645d2d4066ca51ccbff2e505-213d3c41-a4d9-472b-b875-5688e85f5ee300307130fe6c4703'

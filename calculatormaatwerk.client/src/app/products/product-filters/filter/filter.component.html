@@ -1,0 +1,37 @@
+
+<div *ngIf="!isLoading; else loading">
+  <hr />
+<h3 (click)="toggleDropdown()">
+  <!-- [class.open]="filter.open"-->
+  <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ExpandMoreIcon">
+    <path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+  </svg>
+  <span>{{ deepFilter.name | translate }}</span>
+</h3>
+
+<div class="filter-options" *ngIf="isDropdownOpen"> 
+  <div *ngIf="deepFilter.type === 'checkbox'">
+    <div class="filter-option" *ngFor="let checkboxtext of GetValues(deepFilter.value)">
+      <input type="checkbox" id="{{ checkboxtext }}" [(ngModel)]="checkboxStates[checkboxtext]" (change)="onCheckboxChange($event, checkboxtext)" />
+      <label for="{{ checkboxtext }}">{{ checkboxtext | translate }}</label>
+      </div> 
+  </div>
+
+    <div *ngIf="deepFilter.type === 'range'"> 
+      <div class="price-inputs">
+        <input type="number" [(ngModel)]="slidervalue[0]" placeholder="Van" />
+        <span>tot</span>
+        <input type="number" [(ngModel)]="slidervalue[1]" placeholder="Tot" />
+
+      </div>
+      <mat-slider class="myslider" [min]="initialSliderMin" [step]="step" [max]="initialSliderMax">
+        <input [(ngModel)]="slidervalue[0]" (input)="changedValueSlider($event, getValuesWithKeys(deepFilter.value))" matSliderStartThumb>
+        <input [(ngModel)]="slidervalue[1]" (input)="changedValueSlider($event, getValuesWithKeys(deepFilter.value))" matSliderEndThumb>
+      </mat-slider>
+    </div>
+  </div>
+  </div>
+
+  <ng-template #loading>
+    <p>Loading data, please wait...</p>
+  </ng-template>

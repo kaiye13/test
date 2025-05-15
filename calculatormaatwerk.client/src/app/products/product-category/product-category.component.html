@@ -1,0 +1,9 @@
+<section class="categories" *ngIf="categories && categories.length > 0">
+  <div class="category" *ngFor="let category of categories">
+    <img [src]="category?.img" alt="{{ category?.name }}">
+    <p>{{ category?.name }}</p>
+  </div>
+  <div *ngIf="!categories || categories.length === 0">
+    No categories found.
+  </div>
+</section>

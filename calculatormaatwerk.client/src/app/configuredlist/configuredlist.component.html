@@ -1,0 +1,110 @@
+<div *ngIf="!isLoading; else loading">
+<div class="max-width">
+<div class="top-section">
+  <!-- Back Button -->
+  <a (click)="addNewProduct()" class="back-link">← {{ 'ToProductView' | translate }}</a>
+
+</div>
+
+<!-- Rest of the Page Content (Product List and Summary) -->
+<div class="container">
+
+  <!-- Product List -->
+  <div class="product-list" [ngClass]="{'mobile-layout': isMobile}">
+    <div class="order-info-top">
+      <div class="order-details">
+        <h4>{{ 'Your Order' | translate }}</h4>
+        <p>{{ amountOfProducts }} {{'article(s)' | translate }}</p>
+      </div>
+      <button (click)="addNewProduct()" class="top-add-btn">+ {{'AddNew' | translate }}</button>
+    </div>
+    <div *ngFor="let product of products; let i = index" class="product-item">
+      <div class="imagewithmaterials">
+      <img [src]="product.imageUrl" alt="Product image" class="product-image" />
+
+      <div class="product-details">
+       
+      <h4>{{ checkForNickname(product) | translate }}</h4>        
+      <p *ngIf="nicknameUsed">
+          {{ 'Material' | translate }}: {{ product.title | translate }}
+        </p>
+      <ng-container *ngFor="let material of product.materials">
+
+        <p *ngIf="material.code !== 'CoeckNumber' && material.code !== 'BTW' && material.code !== 'Nickname'">
+          {{ material.code | translate }} : {{ material.value | translate }}
+        </p>
+      </ng-container>
+      <!-- <p>{{ product.place }}</p> 
+      <p>{{'ExtraPolish' | translate}}: {{ product.isOnlay }}</p>
+      <p>{{'Measurements Material' | translate}}: {{ product.size }}</p> -->
+
+      <!-- Kopieer en pas aan link -->
+      <!-- <a href="#" class="copy-link">Kopieer en pas aan</a> -->
+    </div></div>
+        <div class="quantity-control">
+          <button (click)="decreaseQuantity(i)" class="las la-minus"></button>
+          <span style="width: 4%;">{{ product.quantity }}</span>
+          <button (click)="increaseQuantity(i)" class="las la-plus"></button>
+          <button (click)="removeProduct(i)" id="remove" class="las la-trash"></button>
+          <p class="prices">{{'PPI' | translate}}: {{valuta}} {{ product.unitPrice.toString().replace('.', ',')}}</p>
+        </div>
+
+
+        <!-- Edit button -->
+        <!-- <a href="#" class="edit-link">Bewerk</a> -->
+      </div>
+    <div class="bottom-add-section">
+      <div class="text-container">
+        <h4>{{ 'Complete' | translate}}</h4>
+        <p>{{ 'AddExtraProd' | translate}}</p>
+      </div>
+      <button (click)="addNewProduct()" class="bottom-add-btn">+ {{'AddNew' | translate}}</button>
+    </div>
+  </div>
+
+
+  <!-- Mobile Cart Summary Toggle -->
+  <div *ngIf="isMobile" class="cart-summary-toggle">
+    <div class="alignnexttoeachother">
+      <p>{{ 'Your Order' | translate }} </p>
+      <p>({{ products.length }} {{'article(s)' | translate }})</p>
+    </div>
+    <div class="alignnexttoeachother">
+      <strong>{{'Total' | translate}}: {{valuta}} {{ getTotal().toString().replace('.', ',') }}</strong>
+      <button (click)="checkout()" class="checkout-btn ">
+        <span class="las la-shopping-cart basket"></span> <span>{{ 'OrderOnline' | translate }}</span> </button>
+      <button (click)="toggleCartSummary()" class="summary-toggle-btn">
+        {{ isSummaryVisible ? '' : 'i' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Cart Summary as a Drawer for Mobile -->
+  <div class="cart-summary" [ngClass]="{'mobile-summary': isMobile, 'show': isSummaryVisible}">
+   
+    <div class="cart-summary-content">
+      <button (click)="toggleCartSummary()" class="summary-toggle-btn">
+        x
+      </button>
+      <h3>{{ 'Your Order' | translate }}</h3>
+      <div class="order-summary-box">
+        <p>{{'SubTotal' | translate}}: {{valuta}} {{ getSubtotal().toString().replace('.', ',') }}</p>
+        <p *ngIf="isBtwUsed; else inclBtw">{{ 'Btw' | translate }}: {{valuta}} {{ getVat().toString().replace('.', ',') }}</p>
+        <ng-template #inclBtw>
+          <p>{{ 'InclBtw' | translate }}</p>
+        </ng-template>
+        <hr />
+        <p><strong>{{'Total' | translate}}: {{valuta}} {{ getTotal().toString().replace('.', ',') }}</strong></p>
+      </div>
+      <button (click)="checkout()" class="checkout-btn ">
+       <span class="las la-shopping-cart basket"></span> <span>{{ 'OrderOnline' | translate }}</span> </button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<!-- Loading Template -->
+<ng-template #loading>
+  <p *ngIf="showLoadingMessage">Loading data, please wait...</p>
+</ng-template>
+  <!-- Bottom "Nieuwe toevoegen" Section -->

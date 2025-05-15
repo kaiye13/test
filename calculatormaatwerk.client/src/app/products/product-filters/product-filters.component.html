@@ -1,0 +1,10 @@
+<section class="filters">
+
+    <div *ngFor="let windowfilter of deepFilter">
+      
+         <app-filter [filter]="windowfilter"  (onfilterchange)="filterChangedWindow($event,windowfilter.name)"></app-filter>
+        <!-- -->
+    </div>
+
+
+</section>
